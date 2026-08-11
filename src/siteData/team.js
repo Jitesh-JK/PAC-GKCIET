@@ -23,9 +23,9 @@ export const COORDINATORS = [
     id: 2,
     name: 'Urmi Singha',
     role: 'Club President / Student Coordinator',
-    avatar: 'public/member_images/1_urmi.jpeg',
+    avatar: '/member_images/1_urmi.jpeg',
     // ring: 'cyan',
-    ring: 'green',
+    ring: 'cyan',
     tag: 'PRESIDENT',
     links: {
       linkedin: 'https://www.linkedin.com/in/urmisingha003/',
@@ -51,7 +51,7 @@ export const CORE_OPS = [
     id: 4,
     name: 'Jitesh Kumar Gouda',
     //role: 'Website Developer & Tech Lead',
-    avatar: 'public/member_images/2_jitesh.jpeg',
+    avatar: '/member_images/2_jitesh.jpeg',
     ring: 'green',
     tag: 'TECH LEAD',
     links: {
@@ -64,7 +64,7 @@ export const CORE_OPS = [
     id: 5,
     name: 'Sachin Kumar Singh',
     //role: 'Event Operations Lead',
-    avatar: '',
+    avatar: '/member_images/3_sachin.jpeg',
     ring: 'muted',
     links: {
       linkedin: 'https://www.linkedin.com/in/sachin-kumar-singh-b12798315/',

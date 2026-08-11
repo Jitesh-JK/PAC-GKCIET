@@ -119,8 +119,7 @@ export default function HeroSection() {
         }}
       >
         <img
-          //src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=600"
-          src="public/hero_page/galaxy_4.png"
+          src="/hero_page/galaxy_4.png"
           alt="Galaxy background"
           className="w-full h-auto object-cover rounded-full opacity-90"
           style={{ filter: 'brightness(1.00) saturate(0.9)' , mixBlendMode: 'screen'  }}
@@ -144,7 +143,7 @@ export default function HeroSection() {
         }}
       >
         <img          
-          src="public/hero_page/earth.png"
+          src="/hero_page/earth.png"
           alt="Earth crescent"
           className="w-full h-auto object-cover"
           style={{ filter: 'brightness(1.1) contrast(1.1)', mixBlendMode: 'screen' }}
@@ -167,7 +166,7 @@ export default function HeroSection() {
         }}
       >
         <img
-          src="public/hero_page/star.jpg"
+          src="/hero_page/star.jpg"
           alt="Star flare"
           className="w-full h-auto object-cover rounded-full"
           style={{
