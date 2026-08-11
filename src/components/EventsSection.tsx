@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { Satellite, CalendarDays, Navigation } from 'lucide-react';
 import { EVENTS as _EVENTS } from '../siteData.js';
 
@@ -7,10 +7,10 @@ import { EVENTS as _EVENTS } from '../siteData.js';
 interface Event {
   id: number;
   title: string;
-  img: string;
-  date: string;
-  coords: string;
-  desc: string;
+  img?: string;
+  date?: string;
+  coords?: string;
+  desc?: string;
   status?: string;
   registrationLink?: string;
 }
@@ -18,7 +18,7 @@ interface Event {
 const EVENTS = _EVENTS as Event[];
 
 /* ── Laser line draw animation ── */
-const lineDraw = {
+const lineDraw: Variants = {
   hidden: { scaleX: 0 },
   visible: {
     scaleX: 1,
@@ -78,9 +78,31 @@ export default function EventsSection() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   const getPanelWidth = (idx: number): string => {
-    if (hoveredIdx === null) return '25%';
-    if (idx === hoveredIdx) return '46%';
-    return '18%';
+    const N = EVENTS.length;
+    if (N === 0) return '0%';
+
+    // If more than 4 events, use fixed pixel dimensions for horizontal scroll
+    if (N > 4) {
+      if (hoveredIdx === null) return '260px';
+      if (idx === hoveredIdx) return '440px';
+      return '200px';
+    }
+
+    // If 4 or fewer events, stretch dynamically to fit 100% of container
+    if (hoveredIdx === null) {
+      return `${100 / N}%`;
+    }
+    if (idx === hoveredIdx) {
+      if (N === 1) return '100%';
+      if (N === 2) return '60%';
+      if (N === 3) return '50%';
+      return '46%'; // N === 4
+    }
+    // Sibling panels share the remaining space
+    const hoverWidth = N === 2 ? 60 : N === 3 ? 50 : 46;
+    const remainingWidth = 100 - hoverWidth;
+    const siblingWidth = remainingWidth / (N - 1);
+    return `${siblingWidth}%`;
   };
 
   return (
@@ -103,12 +125,17 @@ export default function EventsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.7, ease: 'easeOut' }}
-          className="flex gap-2 overflow-hidden rounded-xl"
-          style={{ height: '420px' }}
+          className={`flex gap-2 rounded-xl pb-4 ${
+            EVENTS.length > 4 
+              ? 'overflow-x-auto select-none' 
+              : 'overflow-hidden'
+          }`}
+          style={{ height: '436px' }}
         >
           {EVENTS.map((event, idx) => {
             const isActive = hoveredIdx === idx;
             const statusCfg = event.status ? STATUS_CONFIG[event.status] : null;
+            const hasImage = !!event.img?.trim();
 
             return (
               <motion.div
@@ -124,14 +151,26 @@ export default function EventsSection() {
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
               >
-                {/* Background image */}
-                <motion.img
-                  src={event.img}
-                  alt={event.title}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  animate={{ scale: isActive ? 1.08 : 1.0 }}
-                  transition={{ type: 'spring', stiffness: 80, damping: 20 }}
-                />
+                {/* Background image or fallback canvas */}
+                {hasImage ? (
+                  <motion.img
+                    src={event.img}
+                    alt={event.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    animate={{ scale: isActive ? 1.08 : 1.0 }}
+                    transition={{ type: 'spring', stiffness: 80, damping: 20 }}
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{
+                      background:
+                        'radial-gradient(ellipse at center, rgba(0,212,255,0.08) 0%, rgba(2,2,8,0.95) 70%)',
+                    }}
+                  >
+                    <Satellite size={36} strokeWidth={1} style={{ color: 'rgba(255,255,255,0.12)' }} />
+                  </div>
+                )}
 
                 {/* Dark overlay — fades back when active */}
                 <motion.div
@@ -201,27 +240,35 @@ export default function EventsSection() {
                           {event.title}
                         </h3>
 
-                        <p className="font-heading text-xs tracking-[0.05em] text-white/55 leading-relaxed line-clamp-3">
-                          {event.desc}
-                        </p>
+                        {event.desc && (
+                          <p className="font-heading text-xs tracking-[0.05em] text-white/55 leading-relaxed line-clamp-3">
+                            {event.desc}
+                          </p>
+                        )}
 
-                        <div className="flex flex-col gap-1 pt-1">
-                          <div className="flex items-center gap-1.5">
-                            <Navigation size={10} className="text-neon-cyan flex-shrink-0" />
-                            <span className="font-heading text-[10px] tracking-[0.1em] text-neon-cyan/80">
-                              {event.coords}
-                            </span>
+                        {(event.coords || event.date) && (
+                          <div className="flex flex-col gap-1 pt-1">
+                            {event.coords && (
+                              <div className="flex items-center gap-1.5">
+                                <Navigation size={10} className="text-neon-cyan flex-shrink-0" />
+                                <span className="font-heading text-[10px] tracking-[0.1em] text-neon-cyan/80">
+                                  {event.coords}
+                                </span>
+                              </div>
+                            )}
+                            {event.date && (
+                              <div className="flex items-center gap-1.5">
+                                <CalendarDays size={10} className="text-white/40 flex-shrink-0" />
+                                <span className="font-heading text-[10px] tracking-[0.1em] text-white/40">
+                                  {event.date}
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            <CalendarDays size={10} className="text-white/40 flex-shrink-0" />
-                            <span className="font-heading text-[10px] tracking-[0.1em] text-white/40">
-                              {event.date}
-                            </span>
-                          </div>
-                        </div>
+                        )}
 
-                        {/* CTA — active registration link OR concluded badge */}
-                        {event.registrationLink ? (
+                        {/* CTA — only when a registration link exists */}
+                        {event.registrationLink && (
                           <motion.a
                             href={event.registrationLink}
                             target="_blank"
@@ -236,21 +283,6 @@ export default function EventsSection() {
                             <Satellite size={11} />
                             RSVP / JOIN MISSION
                           </motion.a>
-                        ) : (
-                          <div
-                            className="mt-2 font-heading text-[10px] tracking-[0.18em] uppercase border rounded px-3.5 py-2 flex items-center gap-2 w-fit"
-                            style={{
-                              color: 'rgba(255,255,255,0.22)',
-                              borderColor: 'rgba(255,255,255,0.10)',
-                              background: 'rgba(255,255,255,0.02)',
-                            }}
-                          >
-                            <span
-                              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-                              style={{ background: 'rgba(255,255,255,0.18)' }}
-                            />
-                            EVENT CONCLUDED
-                          </div>
                         )}
                       </div>
                     </motion.div>

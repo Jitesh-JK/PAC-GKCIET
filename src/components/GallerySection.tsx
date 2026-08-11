@@ -1,27 +1,28 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { GALLERY_IMAGES as _GALLERY_IMAGES, FILTER_TABS as _FILTER_TABS } from '../siteData.js';
+import { useMemo, useState } from 'react';
+import { motion, AnimatePresence, type Variants } from 'framer-motion';
+import {
+  GALLERY_IMAGES as _GALLERY_IMAGES,
+  ALL_LOGS_PREVIEW as _ALL_LOGS_PREVIEW,
+  FILTER_TABS as _FILTER_TABS,
+} from '../siteData.js';
 
-type FilterKey = 'ALL' | 'REP_MEDLEY' | 'SKY_CAMP' | 'LAB_CALIBRATION';
+type FilterKey = 'ALL' | string;
 
 interface GalleryImage {
-  id: number;
-  category: Exclude<FilterKey, 'ALL'>;
+  category: string;
+  activityLabel: string;
   src: string;
-  title: string;
-  frameId: string;
-  meta: string;
-  tracking: string;
-  height: string;
-  track: string;
-  time: string;
 }
 
 const GALLERY_IMAGES = _GALLERY_IMAGES as GalleryImage[];
-const FILTER_TABS: { key: FilterKey; label: string }[] = _FILTER_TABS as { key: FilterKey; label: string }[];
+const ALL_LOGS_PREVIEW = _ALL_LOGS_PREVIEW as GalleryImage[];
+const FILTER_TABS: { key: FilterKey; label: string }[] = _FILTER_TABS as {
+  key: FilterKey;
+  label: string;
+}[];
 
 /* ── Laser line draw animation ── */
-const lineDraw = {
+const lineDraw: Variants = {
   hidden: { scaleX: 0 },
   visible: {
     scaleX: 1,
@@ -71,8 +72,17 @@ function SectionHeader({ label }: { label: string }) {
 }
 
 /* ── Single gallery card ── */
-function GalleryCard({ image }: { image: GalleryImage }) {
+function GalleryCard({
+  image,
+  onImageError,
+}: {
+  image: GalleryImage;
+  onImageError: (src: string) => void;
+}) {
   const [hovered, setHovered] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  if (failed) return null;
 
   return (
     <motion.div
@@ -93,16 +103,18 @@ function GalleryCard({ image }: { image: GalleryImage }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      {/* Image */}
       <motion.img
         src={image.src}
-        alt={image.title}
+        alt={image.activityLabel}
         className="w-full h-full object-cover"
         animate={{ scale: hovered ? 1.07 : 1.0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
+        onError={() => {
+          setFailed(true);
+          onImageError(image.src);
+        }}
       />
 
-      {/* Constant gradient overlay */}
       <div
         className="absolute inset-0"
         style={{
@@ -110,74 +122,49 @@ function GalleryCard({ image }: { image: GalleryImage }) {
         }}
       />
 
-      {/* Default title tag */}
       <div className="absolute bottom-3 left-3 right-3 z-10">
-        <motion.p
-          className="font-heading text-[11px] tracking-[0.1em] text-white/70 leading-tight"
-          animate={{ opacity: hovered ? 0 : 1 }}
-          transition={{ duration: 0.2 }}
+        <p
+          className="font-heading text-[11px] tracking-[0.1em] leading-tight"
+          style={{
+            color: hovered ? 'rgb(0,212,255)' : 'rgba(255,255,255,0.7)',
+            textShadow: hovered ? '0 0 8px rgba(0,212,255,0.7)' : 'none',
+            transition: 'color 0.25s ease',
+          }}
         >
-          {image.title}
-        </motion.p>
+          {image.activityLabel}
+        </p>
       </div>
-
-      {/* Hover telemetry overlay */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            key="telemetry"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 6 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="absolute bottom-0 left-0 right-0 z-20 px-3 pb-3 pt-8"
-            style={{
-              background:
-                'linear-gradient(to top, rgba(2,2,8,0.95) 0%, rgba(2,2,8,0.7) 70%, transparent 100%)',
-            }}
-          >
-            {/* Frame ID + metadata */}
-            <div className="flex items-center gap-1.5 mb-2">
-              <span
-                className="font-heading text-[9px] tracking-[0.18em] text-neon-cyan"
-                style={{ textShadow: '0 0 8px rgba(0,212,255,0.7)' }}
-              >
-                [{image.frameId} // {image.meta}]
-              </span>
-            </div>
-
-            {/* Telemetry grid */}
-            <div className="grid grid-cols-4 gap-x-2">
-              {[
-                { label: 'TRACKING', value: image.tracking },
-                { label: 'HEIGHT', value: image.height },
-                { label: 'TRACK', value: image.track },
-                { label: 'TIME', value: image.time },
-              ].map((item) => (
-                <div key={item.label} className="flex flex-col gap-0.5">
-                  <span className="font-heading text-[8px] tracking-[0.12em] text-white/35 uppercase leading-none">
-                    {item.label}
-                  </span>
-                  <span className="font-heading text-[9px] tracking-[0.08em] text-white/70 leading-none">
-                    {item.value}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   );
 }
 
 export default function GallerySection() {
   const [activeFilter, setActiveFilter] = useState<FilterKey>('ALL');
+  const [failedSrcs, setFailedSrcs] = useState<Set<string>>(() => new Set());
 
-  const filteredImages =
-    activeFilter === 'ALL'
-      ? GALLERY_IMAGES
-      : GALLERY_IMAGES.filter((img) => img.category === activeFilter);
+  const handleImageError = (src: string) => {
+    setFailedSrcs((prev) => {
+      if (prev.has(src)) return prev;
+      const next = new Set(prev);
+      next.add(src);
+      return next;
+    });
+  };
+
+  const isValid = (img: GalleryImage) => !failedSrcs.has(img.src);
+
+  const filteredImages = useMemo(() => {
+    if (activeFilter === 'ALL') {
+      const preview = ALL_LOGS_PREVIEW.filter(isValid);
+      if (preview.length >= 12) return preview.slice(0, 12);
+
+      const used = new Set(preview.map((img) => img.src));
+      const backfill = GALLERY_IMAGES.filter((img) => isValid(img) && !used.has(img.src));
+      return [...preview, ...backfill].slice(0, 12);
+    }
+
+    return GALLERY_IMAGES.filter((img) => img.category === activeFilter && isValid(img));
+  }, [activeFilter, failedSrcs]);
 
   return (
     <section id="gallery" className="relative py-28 px-6 overflow-hidden">
@@ -213,7 +200,7 @@ export default function GallerySection() {
               return (
                 <button
                   key={tab.key}
-                  onClick={() => setActiveFilter(tab.key as FilterKey)}
+                  onClick={() => setActiveFilter(tab.key)}
                   className="relative font-heading text-[11px] font-semibold tracking-[0.15em] uppercase px-4 py-2 rounded-lg transition-all duration-300"
                   style={{
                     color: isActive ? 'rgb(0,212,255)' : 'rgba(255,255,255,0.45)',
@@ -243,12 +230,12 @@ export default function GallerySection() {
           >
             {filteredImages.map((image, idx) => (
               <motion.div
-                key={image.id}
+                key={`${image.category}-${image.src}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: 'easeOut', delay: idx * 0.06 }}
               >
-                <GalleryCard image={image} />
+                <GalleryCard image={image} onImageError={handleImageError} />
               </motion.div>
             ))}
           </motion.div>

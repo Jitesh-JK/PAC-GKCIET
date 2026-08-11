@@ -30,15 +30,15 @@ export default function Navbar() {
           style={{ background: 'rgba(0,212,255,0.04)' }}
         >
           <Radio
-            size={9}
+            size={11}
             className="text-neon-cyan flex-shrink-0 animate-pulse"
             strokeWidth={2}
           />
-          <p className="font-heading text-[9px] tracking-[0.22em] uppercase text-neon-cyan/70 truncate">
+          <p className="font-heading text-[11px] tracking-[0.22em] uppercase text-neon-cyan/70 truncate">
             {ANNOUNCEMENT}
           </p>
           <Radio
-            size={9}
+            size={11}
             className="text-neon-cyan flex-shrink-0 animate-pulse"
             strokeWidth={2}
           />
@@ -53,8 +53,27 @@ export default function Navbar() {
             e.preventDefault();
             handleNavClick('#home');
           }}
-          className="font-heading font-bold text-base tracking-[0.15em] text-white hover:text-neon-cyan transition-colors duration-300"
+          className="flex items-center gap-2.5 font-heading font-bold text-base tracking-[0.15em] text-white hover:text-neon-cyan transition-colors duration-300"
         >
+          {/* Logo container — supports image overlay with fallback styling */}
+          <div className="w-7 h-7 rounded-full border border-white/10 bg-white/5 flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+            <img 
+              src="" // In the future, set this to the logo path (e.g. "/logo.png")
+              alt="PAC Logo" 
+              className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+              onError={(e) => {
+                e.currentTarget.style.opacity = '0';
+              }}
+              onLoad={(e) => {
+                e.currentTarget.style.opacity = '1';
+              }}
+              style={{ opacity: 0 }}
+            />
+            {/* Fallback space-gradient letter */}
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-cyan-500/20 to-purple-500/20 text-[10px] font-bold text-white/90">
+              P
+            </div>
+          </div>
           PAC
         </a>
 

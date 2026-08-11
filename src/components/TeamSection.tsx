@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { motion, type Variants } from 'framer-motion';
 import { Linkedin, Mail, Github } from 'lucide-react';
 import {
   FACULTY as _FACULTY,
@@ -22,10 +23,52 @@ interface TeamMember {
   id: number;
   name: string;
   role: string;
-  avatar: string;
+  avatar?: string;
   ring: RingTier;
   tag?: string;
   links?: MemberLinks;
+}
+
+function getInitials(name: string): string {
+  const parts = name.split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function MemberAvatar({ member }: { member: TeamMember }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const hasAvatar = !!member.avatar?.trim() && !imageFailed;
+
+  if (!hasAvatar) {
+    return (
+      <div
+        className="w-16 h-16 rounded-full flex items-center justify-center font-heading font-bold text-base tracking-[0.06em] text-white/90"
+        style={{
+          ...RING_STYLES[member.ring],
+          background:
+            member.ring === 'cyan'
+              ? 'rgba(0,212,255,0.12)'
+              : member.ring === 'green'
+                ? 'rgba(0,255,148,0.12)'
+                : 'rgba(255,255,255,0.08)',
+        }}
+        aria-label={member.name}
+      >
+        {getInitials(member.name)}
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={member.avatar}
+      alt={member.name}
+      className="w-16 h-16 rounded-full object-cover object-center"
+      style={RING_STYLES[member.ring]}
+      onError={() => setImageFailed(true)}
+    />
+  );
 }
 
 const FACULTY = _FACULTY as TeamMember[];
@@ -53,7 +96,7 @@ const RING_STYLES: Record<RingTier, React.CSSProperties> = {
 /* ─────────────────────────────────────────────
    Animation variants
 ───────────────────────────────────────────── */
-const lineDraw = {
+const lineDraw: Variants = {
   hidden: { scaleX: 0 },
   visible: {
     scaleX: 1,
@@ -61,7 +104,7 @@ const lineDraw = {
   },
 };
 
-const cardReveal = {
+const cardReveal: Variants = {
   hidden: { opacity: 0, y: 22 },
   visible: (delay: number) => ({
     opacity: 1,
@@ -126,13 +169,13 @@ function SubHeader({ label, index }: { label: string; index: string }) {
       className="flex items-center gap-3 mb-5"
     >
       <span
-        className="font-heading text-[10px] font-bold tracking-[0.2em] text-neon-cyan"
+        className="font-heading text-[12px] font-bold tracking-[0.2em] text-neon-cyan"
         style={{ textShadow: '0 0 8px rgba(0,212,255,0.6)' }}
       >
         {index}
       </span>
       <div className="w-px h-4 bg-white/15" />
-      <span className="font-heading text-xs font-semibold tracking-[0.2em] uppercase text-white/50">
+      <span className="font-heading text-sm font-semibold tracking-[0.2em] uppercase text-white/50">
         {label}
       </span>
       <div className="flex-1 h-px bg-white/[0.06]" />
@@ -144,6 +187,9 @@ function SubHeader({ label, index }: { label: string; index: string }) {
    Horizontal member card
 ───────────────────────────────────────────── */
 function MemberCard({ member, delay }: { member: TeamMember; delay: number }) {
+  const hasLinks =
+    !!member.links?.linkedin || !!member.links?.github || !!member.links?.email;
+
   return (
     <motion.div
       custom={delay}
@@ -156,109 +202,94 @@ function MemberCard({ member, delay }: { member: TeamMember; delay: number }) {
           member.ring === 'cyan'
             ? 'rgba(0,212,255,0.35)'
             : member.ring === 'green'
-            ? 'rgba(0,255,148,0.35)'
-            : 'rgba(255,255,255,0.15)',
+              ? 'rgba(0,255,148,0.35)'
+              : 'rgba(255,255,255,0.15)',
         background: 'rgba(255,255,255,0.06)',
       }}
-      className="flex items-center gap-4 p-4 rounded-xl transition-colors duration-300"
+      className="flex h-full w-full max-w-[350px] mx-auto min-h-[6.5rem] items-center gap-4 p-3 rounded-xl transition-colors duration-300"
       style={{
         background: 'rgba(255,255,255,0.035)',
         backdropFilter: 'blur(12px)',
         border: '1px solid rgba(255,255,255,0.07)',
       }}
     >
-      {/* ── Circular avatar ── */}
-      <div className="flex-shrink-0">
-        <img
-          src={member.avatar}
-          alt={member.name}
-          className="w-16 h-16 rounded-full object-cover object-center"
-          style={RING_STYLES[member.ring]}
-        />
+      {/* ── Circular avatar or initials fallback ── */}
+      <div className="flex-shrink-0 self-start">
+        <MemberAvatar member={member} />
       </div>
 
       {/* ── Info block ── */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
-          <p className="font-heading font-bold text-sm tracking-[0.06em] text-white leading-tight truncate">
-            {member.name}
-          </p>
-          {member.tag && (
-            <span
-              className="font-heading text-[7px] font-bold tracking-[0.15em] uppercase px-1.5 py-0.5 rounded-sm flex-shrink-0"
-              style={{
-                background: 'rgba(0,212,255,0.12)',
-                color: 'rgba(0,212,255,0.9)',
-                border: '1px solid rgba(0,212,255,0.25)',
-              }}
+      <div className="flex flex-1 flex-col min-w-0 min-h-[4.75rem] justify-between">
+        <div>
+          <div className="flex items-start gap-2 min-w-0">
+            <p
+              className="font-heading font-bold text-base tracking-[0.06em] text-white leading-tight truncate flex-1 min-w-0"
+              title={member.name}
             >
-              {member.tag}
-            </span>
-          )}
-        </div>
-        <p className="font-heading text-[11px] tracking-[0.07em] text-white/45 mt-0.5 leading-snug line-clamp-2">
-          {member.role}
-        </p>
-
-        {/* ── Contact icons (conditionally rendered) ── */}
-        {member.links && (
-          <div className="flex items-center gap-2.5 mt-2.5">
-            {member.links.linkedin && (
-              <a
-                href={member.links.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-6 h-6 rounded transition-all duration-200"
-                style={{ color: 'rgba(255,255,255,0.35)' }}
-                aria-label="LinkedIn"
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'rgba(0,212,255,0.9)')
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')
-                }
+              {member.name}
+            </p>
+            {member.tag && (
+              <span
+                className="font-heading text-[9px] font-bold tracking-[0.15em] uppercase px-1.5 py-0.5 rounded-sm flex-shrink-0 max-w-[4.5rem] truncate"
+                style={{
+                  background: 'rgba(0,212,255,0.12)',
+                  color: 'rgba(0,212,255,0.9)',
+                  border: '1px solid rgba(0,212,255,0.25)',
+                }}
+                title={member.tag}
               >
-                <Linkedin size={13} strokeWidth={1.8} />
-              </a>
-            )}
-
-            {member.links.github && (
-              <a
-                href={member.links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-6 h-6 rounded transition-all duration-200"
-                style={{ color: 'rgba(255,255,255,0.35)' }}
-                aria-label="GitHub"
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'rgba(0,212,255,0.9)')
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')
-                }
-              >
-                <Github size={13} strokeWidth={1.8} />
-              </a>
-            )}
-
-            {member.links.email && (
-              <a
-                href={`mailto:${member.links.email}`}
-                className="flex items-center justify-center w-6 h-6 rounded transition-all duration-200"
-                style={{ color: 'rgba(255,255,255,0.35)' }}
-                aria-label="Email"
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'rgba(0,212,255,0.9)')
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.35)')
-                }
-              >
-                <Mail size={13} strokeWidth={1.8} />
-              </a>
+                {member.tag}
+              </span>
             )}
           </div>
-        )}
+          <p
+            className="font-heading text-[13px] tracking-[0.07em] text-white/45 mt-0.5 leading-snug line-clamp-2 min-h-[2rem]"
+            title={member.role}
+          >
+            {member.role}
+          </p>
+        </div>
+
+        {/* ── Contact icons — fixed height slot keeps all cards equal ── */}
+        <div className="flex items-center gap-2 mt-1 min-h-[1.5rem]">
+          {hasLinks && member.links && (
+            <>
+              {member.links.linkedin && (
+                <a
+                  href={member.links.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-6 h-6 rounded-full border border-white/10 bg-white/5 text-white/40 hover:text-neon-cyan hover:bg-neon-cyan/10 hover:border-neon-cyan/30 transition-all duration-300 hover:shadow-[0_0_8px_rgba(0,212,255,0.2)]"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin size={12} strokeWidth={2} />
+                </a>
+              )}
+
+              {member.links.github && (
+                <a
+                  href={member.links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-6 h-6 rounded-full border border-white/10 bg-white/5 text-white/40 hover:text-neon-cyan hover:bg-neon-cyan/10 hover:border-neon-cyan/30 transition-all duration-300 hover:shadow-[0_0_8px_rgba(0,212,255,0.2)]"
+                  aria-label="GitHub"
+                >
+                  <Github size={12} strokeWidth={2} />
+                </a>
+              )}
+
+              {member.links.email && (
+                <a
+                  href={`mailto:${member.links.email}`}
+                  className="flex items-center justify-center w-6 h-6 rounded-full border border-white/10 bg-white/5 text-white/40 hover:text-neon-cyan hover:bg-neon-cyan/10 hover:border-neon-cyan/30 transition-all duration-300 hover:shadow-[0_0_8px_rgba(0,212,255,0.2)]"
+                  aria-label="Email"
+                >
+                  <Mail size={12} strokeWidth={2} />
+                </a>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </motion.div>
   );
@@ -267,17 +298,17 @@ function MemberCard({ member, delay }: { member: TeamMember; delay: number }) {
 /* ─────────────────────────────────────────────
    Grid wrapper helpers
 ───────────────────────────────────────────── */
+const MEMBER_GRID_COLS = 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3';
+
 function MemberGrid({
   members,
-  cols,
   startDelay = 0,
 }: {
   members: TeamMember[];
-  cols: string;
   startDelay?: number;
 }) {
   return (
-    <div className={`grid ${cols} gap-3 mb-14`}>
+    <div className={`grid ${MEMBER_GRID_COLS} gap-3 mb-14 auto-rows-fr`}>
       {members.map((member, idx) => (
         <MemberCard key={member.id} member={member} delay={startDelay + idx * 0.07} />
       ))}
@@ -300,35 +331,19 @@ export default function TeamSection() {
       />
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        <SectionHeader label="04 // Command Crew" />
+        <SectionHeader label="Command Crew" />
 
         <SubHeader index="01" label="Faculty Coordinator" />
-        <MemberGrid
-          members={FACULTY}
-          cols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-          startDelay={0}
-        />
+        <MemberGrid members={FACULTY} startDelay={0} />
 
         <SubHeader index="02" label="Student Representative Leads" />
-        <MemberGrid
-          members={COORDINATORS}
-          cols="grid-cols-1 sm:grid-cols-2"
-          startDelay={0}
-        />
+        <MemberGrid members={COORDINATORS} startDelay={0} />
 
         <SubHeader index="03" label="Core Operations & Web Dev" />
-        <MemberGrid
-          members={CORE_OPS}
-          cols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-          startDelay={0}
-        />
+        <MemberGrid members={CORE_OPS} startDelay={0} />
 
         <SubHeader index="04" label="Active Core Members" />
-        <MemberGrid
-          members={GENERAL_MEMBERS}
-          cols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-          startDelay={0}
-        />
+        <MemberGrid members={GENERAL_MEMBERS} startDelay={0} />
       </div>
     </section>
   );

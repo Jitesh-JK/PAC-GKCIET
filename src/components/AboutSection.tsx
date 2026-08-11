@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { Telescope, Users, FlaskConical, BookMarked } from 'lucide-react';
 import { ABOUT_CARDS, ABOUT_METRICS } from '../siteData.js';
 
@@ -11,7 +11,7 @@ const ICON_LOOKUP: Record<string, React.ElementType> = {
 };
 
 /* ── Fade-up animation variant ── */
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: (delay = 0) => ({
     opacity: 1,
@@ -21,7 +21,7 @@ const fadeUp = {
 };
 
 /* ── Laser line stretch variant ── */
-const lineDraw = {
+const lineDraw: Variants = {
   hidden: { scaleX: 0 },
   visible: {
     scaleX: 1,
@@ -30,7 +30,7 @@ const lineDraw = {
 };
 
 /* ── Metric counter variant ── */
-const metricReveal = {
+const metricReveal: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: (delay: number) => ({
     opacity: 1,

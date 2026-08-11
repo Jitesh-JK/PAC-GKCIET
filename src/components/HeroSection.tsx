@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { Orbit, BookOpen } from 'lucide-react';
 import StarfieldCanvas from './StarfieldCanvas';
 
 /* ── Left galaxy zoom ── */
-const galaxyZoom = {
+const galaxyZoom: Variants = {
   hidden: { scale: 0.4, opacity: 0 },
   visible: {
     scale: 1.0,
@@ -13,7 +13,7 @@ const galaxyZoom = {
 };
 
 /* ── Right Earth zoom ── */
-const earthZoom = {
+const earthZoom: Variants = {
   hidden: { scale: 0.6, opacity: 0 },
   visible: {
     scale: 1.0,
@@ -23,7 +23,7 @@ const earthZoom = {
 };
 
 /* ── Top-right star flare ── */
-const starFlareZoom = {
+const starFlareZoom: Variants = {
   hidden: { scale: 0.5, opacity: 0 },
   visible: {
     scale: 1.0,
@@ -33,7 +33,7 @@ const starFlareZoom = {
 };
 
 /* ── PAC acronym letters ── */
-const letterP = {
+const letterP: Variants = {
   hidden: { x: -300, opacity: 0 },
   visible: {
     x: 0,
@@ -42,7 +42,7 @@ const letterP = {
   },
 };
 
-const letterC = {
+const letterC: Variants = {
   hidden: { x: 300, opacity: 0 },
   visible: {
     x: 0,
@@ -51,7 +51,7 @@ const letterC = {
   },
 };
 
-const letterA = {
+const letterA: Variants = {
   hidden: { scale: 0.3, opacity: 0 },
   visible: {
     scale: [0.3, 1.15, 1.0],
@@ -61,7 +61,7 @@ const letterA = {
 };
 
 /* ── Title reveal ── */
-const titleReveal = {
+const titleReveal: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
@@ -70,7 +70,7 @@ const titleReveal = {
   },
 };
 
-const accentLineReveal = {
+const accentLineReveal: Variants = {
   hidden: { scaleX: 0 },
   visible: {
     scaleX: 1,
@@ -79,7 +79,7 @@ const accentLineReveal = {
 };
 
 /* ── Button reveal ── */
-const buttonReveal = {
+const buttonReveal: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: (i: number) => ({
     opacity: 1,
@@ -119,10 +119,11 @@ export default function HeroSection() {
         }}
       >
         <img
-          src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=600"
+          //src="https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=600"
+          src="public/hero_page/galaxy_4.png"
           alt="Galaxy background"
           className="w-full h-auto object-cover rounded-full opacity-90"
-          style={{ filter: 'brightness(0.85) saturate(0.9)' }}
+          style={{ filter: 'brightness(1.00) saturate(0.9)' , mixBlendMode: 'screen'  }}
         />
       </motion.div>
 
@@ -133,8 +134,8 @@ export default function HeroSection() {
         animate="visible"
         className="absolute pointer-events-none"
         style={{
-          right: '-5%',
-          top: '50%',
+          right: '18%',
+          top: '18%',
           transform: 'translateY(-50%)',
           width: '50vw',
           maxWidth: '700px',
@@ -142,8 +143,8 @@ export default function HeroSection() {
           zIndex: 1,
         }}
       >
-        <img
-          src="https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=600"
+        <img          
+          src="public/hero_page/earth.png"
           alt="Earth crescent"
           className="w-full h-auto object-cover"
           style={{ filter: 'brightness(1.1) contrast(1.1)', mixBlendMode: 'screen' }}
@@ -166,12 +167,11 @@ export default function HeroSection() {
         }}
       >
         <img
-          src="https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=400"
+          src="public/hero_page/star.jpg"
           alt="Star flare"
           className="w-full h-auto object-cover rounded-full"
           style={{
-            filter: 'brightness(1.3) drop-shadow(0 0 20px rgba(0,212,255,0.4))',
-            mixBlendMode: 'screen',
+            filter: 'brightness(1.3) ', mixBlendMode: 'screen',
           }}
         />
       </motion.div>
