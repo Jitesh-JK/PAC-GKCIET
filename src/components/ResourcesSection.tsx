@@ -481,7 +481,7 @@ export default function ResourcesSection() {
 
           {/* ── Right column — Monthly Research Papers ── */}
           <div className="flex-1 min-w-0">
-            <ColumnHeader icon={CalendarDays} label="Monthly Research Papers" accentColor="0,255,148" />
+            <ColumnHeader icon={CalendarDays} label="ORBIT JOURNAL" accentColor="0,255,148" />
             <div
               className="overflow-y-auto pr-1"
               style={{
