@@ -123,7 +123,7 @@ export const MONTHLY_PAPERS = [
     year: '2026',
     img: '/archive/newsletter_1.png',
     downloadLinks: {
-      pdf: 'https://drive.google.com/file/d/1D6Ob61wcCo37LDoikvYXlLzO1H2ZcL6V/view?usp=sharing',
+      pdf: 'https://drive.google.com/file/d/1JKslOjM7vXmGZ5PDMXS5Eq6hL6WSMwMt/view?usp=sharing',
     }
   },
   
