@@ -10,7 +10,7 @@ export const NAV_LINKS = [
 ];
 
 // Set to a URL string to show the "Join the Hub" CTA button. Set to null to hide it.
-export const JOIN_HUB_URL = 'https://forms.gle/ZdS48FVjC2TExEfZA';
+export const JOIN_HUB_URL = 'https://forms.gle/1512qm759Nd8EPC79';
 
 // Set to a string to show the top announcement banner. Set to null to hide it.
 export const ANNOUNCEMENT =

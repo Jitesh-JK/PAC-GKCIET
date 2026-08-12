@@ -24,7 +24,6 @@ export const COORDINATORS = [
     name: 'Urmi Singha',
     role: 'Club President / Student Coordinator',
     avatar: '/member_images/1_urmi.jpeg',
-    // ring: 'cyan',
     ring: 'cyan',
     tag: 'PRESIDENT',
     links: {
@@ -34,7 +33,7 @@ export const COORDINATORS = [
   },
   {
     id: 3,
-    name: 'NA',
+    name: 'Soumyadeb Bose',
     role: 'Vice President / Student Coordinator',
     avatar: '',
     ring: 'cyan',
@@ -84,7 +83,7 @@ export const CORE_OPS = [
   },
   {
     id: 7,
-    name: 'Arit ',
+    name: 'Arit Seal',
     //role: 'Media & Visual Design',
     //avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop&crop=faces',
     ring: 'muted',
@@ -94,7 +93,7 @@ export const CORE_OPS = [
   },
   {
     id: 7,
-    name: 'Soham ',
+    name: 'Soham Patra',
     //role: 'Media & Visual Design',
     //avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop&crop=faces',
     ring: 'muted',
