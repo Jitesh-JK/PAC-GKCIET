@@ -101,6 +101,16 @@ export const CORE_OPS = [
       //linkedin: 'https://linkedin.com/in/sneharao',
     },
   },
+  {
+    id: 8,
+    name: 'Ayush Kumar',
+    //role: 'Media & Visual Design',
+    //avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop&crop=faces',
+    ring: 'muted',
+    links: {
+      //linkedin: 'https://linkedin.com/in/sneharao',
+    },
+  },
 ];
 
 export const GENERAL_MEMBERS = [
