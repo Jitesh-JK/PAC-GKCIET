@@ -474,9 +474,9 @@ export default function GallerySection() {
 
   const isValid = useCallback((img: GalleryImage) => !failedSrcs.has(img.src), [failedSrcs]);
 
-  // Build clean timeline items list from GALLERY_ACTIVITIES (ascending order by sortOrder)
+  // Build clean timeline items list from GALLERY_ACTIVITIES (descending order by sortOrder: higher numbers at top)
   const timelineItems: TimelineItem[] = useMemo(() => {
-    const sorted = [...GALLERY_ACTIVITIES].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+    const sorted = [...GALLERY_ACTIVITIES].sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0));
     const items: TimelineItem[] = [];
 
     for (const act of sorted) {
@@ -493,9 +493,9 @@ export default function GallerySection() {
     return items;
   }, [isValid]);
 
-  // Default directly to first timeline activity (e.g. meeting)
+  // Default directly to first timeline activity (highest sortOrder)
   const defaultFilter = useMemo(() => {
-    const sorted = [...GALLERY_ACTIVITIES].sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
+    const sorted = [...GALLERY_ACTIVITIES].sort((a, b) => (b.sortOrder ?? 0) - (a.sortOrder ?? 0));
     return sorted[0]?.folder ?? 'meeting';
   }, []);
 
@@ -545,7 +545,7 @@ export default function GallerySection() {
           {/* ── Split View Layout (Left Sidebar + Right Main Panel) ── */}
           <div className="flex flex-col md:flex-row gap-6">
             {/* ── Left Sidebar (Timeline Activities) ── */}
-            <div className="w-full md:w-72 lg:w-80 shrink-0 flex flex-col">
+            <div className="w-full md:w-80 lg:w-[22rem] shrink-0 flex flex-col">
               {/* Sidebar Header */}
               <div className="flex items-center pb-3 mb-3 border-b border-white/10">
                 <div className="flex items-center gap-2">
@@ -556,11 +556,11 @@ export default function GallerySection() {
                 </div>
               </div>
 
-              {/* Scrollable Timeline List */}
-              <div className="relative flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto md:max-h-[640px] gap-2.5 pb-2 md:pb-0 pr-0 md:pr-2 select-none">
+              {/* Scrollable Timeline List (~6-7 items visible, then scrolls internally) */}
+              <div className="relative flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto md:max-h-[500px] gap-2.5 pb-2 md:pb-0 pr-0 md:pr-2 select-none">
                 {/* Vertical Spine Line (Visible on desktop) */}
                 <div
-                  className="hidden md:block absolute left-[15px] top-4 bottom-4 w-px pointer-events-none"
+                  className="hidden md:block absolute left-[17px] top-4 bottom-4 w-px pointer-events-none"
                   style={{
                     background:
                       'linear-gradient(to bottom, rgba(0,212,255,0.7) 0%, rgba(0,212,255,0.2) 85%, transparent 100%)',
@@ -573,7 +573,7 @@ export default function GallerySection() {
                     <button
                       key={item.folder}
                       onClick={() => setActiveFilter(item.folder)}
-                      className="relative shrink-0 md:shrink flex items-center p-3.5 md:pl-9 rounded-xl transition-all duration-300 text-left group"
+                      className="relative shrink-0 md:shrink flex items-start p-4 md:py-4 md:pl-10 md:pr-4 rounded-xl transition-all duration-300 text-left group"
                       style={{
                         background: isActive
                           ? 'linear-gradient(90deg, rgba(0,212,255,0.14) 0%, rgba(0,212,255,0.02) 100%)'
@@ -586,9 +586,9 @@ export default function GallerySection() {
                           : 'none',
                       }}
                     >
-                      {/* Timeline Node Dot (on desktop spine) */}
+                      {/* Timeline Node Dot (on desktop spine, vertically aligned with title) */}
                       <div
-                        className={`hidden md:block absolute left-[11px] top-1/2 -translate-y-1/2 rounded-full transition-all duration-300 ${
+                        className={`hidden md:block absolute left-[13px] top-5 -translate-y-1/2 rounded-full transition-all duration-300 ${
                           isActive
                             ? 'w-2.5 h-2.5 bg-cyan-400 shadow-[0_0_12px_#00d4ff] ring-4 ring-cyan-400/25'
                             : 'w-2 h-2 bg-white/20 group-hover:bg-cyan-400/60'
@@ -597,14 +597,14 @@ export default function GallerySection() {
 
                       {/* Active indicator bar */}
                       {isActive && (
-                        <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r bg-cyan-400 shadow-[0_0_10px_#00d4ff]" />
+                        <div className="absolute left-0 top-2.5 bottom-2.5 w-1 rounded-r bg-cyan-400 shadow-[0_0_10px_#00d4ff]" />
                       )}
 
-                      <div className="min-w-0 pr-2">
+                      <div className="min-w-0 pr-1 flex-1">
                         <p
-                          className="font-heading text-xs sm:text-sm tracking-[0.16em] uppercase font-bold transition-all duration-200 truncate"
+                          className="font-heading text-sm sm:text-base tracking-[0.15em] uppercase font-bold transition-all duration-200 leading-snug"
                           style={{
-                            color: isActive ? 'rgb(0,212,255)' : 'rgba(255,255,255,0.7)',
+                            color: isActive ? 'rgb(0,212,255)' : 'rgba(255,255,255,0.75)',
                             textShadow: isActive ? '0 0 10px rgba(0,212,255,0.7)' : 'none',
                           }}
                         >
@@ -612,9 +612,9 @@ export default function GallerySection() {
                         </p>
                         {item.subtitle && (
                           <p
-                            className="font-heading text-[10px] tracking-wider uppercase transition-colors truncate mt-0.5"
+                            className="font-heading text-[11px] sm:text-xs tracking-wider uppercase transition-colors whitespace-pre-line break-words mt-1 leading-snug"
                             style={{
-                              color: isActive ? 'rgba(0,212,255,0.65)' : 'rgba(255,255,255,0.35)',
+                              color: isActive ? 'rgba(0,212,255,0.75)' : 'rgba(255,255,255,0.45)',
                             }}
                           >
                             {item.subtitle}
@@ -646,7 +646,7 @@ export default function GallerySection() {
               {/* Independent Scroll Container */}
               <div
                 ref={scrollContainerRef}
-                className="flex-1 h-[560px] md:h-[620px] max-h-[75vh] overflow-y-auto pr-2"
+                className="flex-1 h-[500px] md:h-[500px] max-h-[72vh] overflow-y-auto pr-2"
               >
                 <AnimatePresence mode="wait">
                   <motion.div

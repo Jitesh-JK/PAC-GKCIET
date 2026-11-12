@@ -7,33 +7,40 @@ import galleryManifest from 'virtual:gallery-manifest';
 const KNOWN_ACTIVITIES = [
   {
     folder: 'meeting',
-    label: 'MEETING',
+    label: 'General MEETINGS',
     subtitle: '',
-    sortOrder: 1,
-  },
-  {
-    folder: '08 April',
-    label: '08 // APR',
-    subtitle: '',
-    sortOrder: 2,
-  },
-  {
-    folder: '12 Feb',
-    label: '12 // FEB',
-    subtitle: '',
-    sortOrder: 3,
+    sortOrder: 5,
   },
   {
     folder: '14 Jan',
-    label: '14 // JAN',
+    label: '14-JAN-2026',
+    subtitle: 'Club Orientation',
+    sortOrder: 1,
+  },
+  {
+    folder: '12 Feb',
+    label: '12-FEB-2026',
+    subtitle: 'Gravitational Waves',
+    sortOrder: 2,
+  },
+  {
+    folder: '08 April',
+    label: '08-APR-2026',
+    subtitle: 'Staring the Starlight',
+    sortOrder: 3,
+  },
+
+  {
+    folder: 'Telescope',
+    label: 'Making of TELESCOPE',
     subtitle: '',
     sortOrder: 4,
   },
   {
-    folder: 'Telescope',
-    label: 'TELESCOPE',
-    subtitle: '',
-    sortOrder: 5,
+    folder: '07 Oct',
+    label: '07-OCT-2026',
+    subtitle: 'Talk By BANAMITA SARKAR',
+    sortOrder: 6,
   },
 ];
 
@@ -53,7 +60,7 @@ function getDynamicActivities() {
       folder,
       label: formatFolderLabel(folder),
       subtitle: '',
-      sortOrder: 100 + idx,
+      sortOrder: -1 - idx,
     }));
 }
 
@@ -103,7 +110,7 @@ function buildActivityImages(activity) {
 
 /** Pick up to `maxTotal` images across recent activities, 2–3 per activity. */
 function buildAllLogsPreview(maxTotal = 12) {
-  const sorted = [...GALLERY_ACTIVITIES].sort((a, b) => a.sortOrder - b.sortOrder);
+  const sorted = [...GALLERY_ACTIVITIES].sort((a, b) => b.sortOrder - a.sortOrder);
   const baseCount = Math.floor(maxTotal / sorted.length);
   const remainder = maxTotal % sorted.length;
   const used = new Map(sorted.map((a) => [a.folder, 0]));
