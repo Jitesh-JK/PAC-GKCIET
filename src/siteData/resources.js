@@ -126,6 +126,15 @@ export const MONTHLY_PAPERS = [
       pdf: 'https://drive.google.com/file/d/1JKslOjM7vXmGZ5PDMXS5Eq6hL6WSMwMt/view?usp=sharing',
     }
   },
+
+  {
+    month: 'SEPT',
+    year: '2026',
+    img: '/archive/newsletter_2.png',
+    downloadLinks: {
+      pdf: 'https://drive.google.com/file/d/1oF3mwvW6ob3UyRpdqZJdWLv59P2QPf4g/view?usp=sharing',
+    }
+  },
   
 ];
 

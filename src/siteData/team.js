@@ -5,24 +5,24 @@
 
 export const FACULTY = [
   {
-    id: 1,
+    
     name: 'Dr. Rakesh Das',
     role: 'Faculty Advisor — Physics Department',
     //avatar: '/member_images/rakesh.jpeg',
     ring: 'cyan',
-    tag: 'ADVISOR',
+    //tag: 'ADVISOR',
     links: {
-      //linkedin: 'https://linkedin.com/in/arunsharma',
-      //email: 'arunsharma@gkciet.ac.in',
+      //linkedin: '',
+      //email: '',
     },
   },
 ];
 
 export const COORDINATORS = [
   {
-    id: 2,
+    
     name: 'Urmi Singha',
-    role: 'Club President / Student Coordinator',
+    role: 'Student Coordinator',
     avatar: '/member_images/1_urmi.jpeg',
     ring: 'cyan',
     tag: 'PRESIDENT',
@@ -31,7 +31,7 @@ export const COORDINATORS = [
       email: 'usingha.mail@gmail.com',
     },
   },
-  {
+  /*{
     id: 3,
     name: 'Soumyadeb Bose',
     role: 'Vice President / Student Coordinator',
@@ -42,12 +42,12 @@ export const COORDINATORS = [
       linkedin: 'https://linkedin.com/in/karanpatel',
       email: '',
     },
-  },
+  },*/
 ];
 
 export const CORE_OPS = [
   {
-    id: 4,
+    
     name: 'Jitesh Kumar Gouda',
     //role: 'Website Developer & Tech Lead',
     avatar: '/member_images/2_jitesh.jpeg',
@@ -60,7 +60,7 @@ export const CORE_OPS = [
     },
   },
   {
-    id: 5,
+    
     name: 'Sachin Kumar Singh',
     //role: 'Event Operations Lead',
     avatar: '/member_images/3_sachin.jpeg',
@@ -71,28 +71,18 @@ export const CORE_OPS = [
     },
   },
   {
-    id: 6,
-    name: 'Anmol Kumar Bhagat',
-    //role: 'Outreach & Partnerships',
-    avatar: '',
-    ring: 'muted',
-    links: {
-      linkedin: 'https://www.linkedin.com/in/anmol-kumar-bhagat-0909a234a/',
-      //email: '',
-    },
-  },
-  {
-    id: 7,
+    
     name: 'Arit Seal',
     //role: 'Media & Visual Design',
     //avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop&crop=faces',
     ring: 'muted',
     links: {
       //linkedin: 'https://linkedin.com/in/sneharao',
+      //email: '',
     },
   },
   {
-    id: 7,
+    
     name: 'Soham Patra',
     //role: 'Media & Visual Design',
     //avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop&crop=faces',
@@ -102,7 +92,7 @@ export const CORE_OPS = [
     },
   },
   {
-    id: 8,
+    
     name: 'Ayush Kumar',
     //role: 'Media & Visual Design',
     //avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=150&h=150&fit=crop&crop=faces',
@@ -115,7 +105,7 @@ export const CORE_OPS = [
 
 export const GENERAL_MEMBERS = [
   {
-    id: 8,
+    
     name: 'Arkaprava Barman',
     //role: 'Sky Observer — Deep Field',
     avatar: '',
@@ -125,7 +115,7 @@ export const GENERAL_MEMBERS = [
     },
   },
   {
-    //id: 9,
+    
     name: 'Anatara Rajak',
     //role: 'Astrophotography Lead',
     avatar: '',
@@ -136,7 +126,7 @@ export const GENERAL_MEMBERS = [
     },
   },
   {
-    //id: 10,
+    
     name: 'Barsha Priya Nayak',
     //role: 'Telescope Operations',
     avatar: '',

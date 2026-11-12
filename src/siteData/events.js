@@ -3,7 +3,7 @@
 // registrationLink: URL string (optional — omit or set null to show "EVENT CONCLUDED" passive state)
 
 export const EVENTS = [
-  {
+  /*{
     id: 0,
     title: 'Sky Gazing Camp',
     img: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=900',
@@ -50,5 +50,37 @@ export const EVENTS = [
     desc: 'A 24-hour open science sprint: analyze real NASA datasets, build sky-survey algorithms, and present findings to faculty judges.',
     status: 'LIVE',
     registrationLink: 'https://forms.gle/YOUR_HACKATHON_FORM',
+  },*/
+  {
+
+    title: "Talk on Quatum Light & Imaging",
+    //img: '/event_images/s.png',
+    img: '/event_images/seminar.png',
+    date: '07-OCT-2026',
+
+    desc: 'This talk was an introductory session on quantum physics and light, delivered by speaker BANAMITA SARKAR. It focused on explaining how light works at the smallest scale and why new quantum methods are needed to capture clear images in low-light conditions.',
+    status: 'CONCLUDED',
+    //registrationLink: 'https://forms.gle/YOUR_HACKATHON_FORM',
+  },
+
+  {
+
+    title: 'Model Making Competiton',
+    img: '/event_images/model.png',
+    date: 'TO BE DECLARE',
+
+    desc: 'Organized around the theme of Chandrayaan, this two-stage competition requires teams to pitch a 7-slide technical proposal in Phase 1. The top three shortlisted teams then advance to Phase 2, receiving institute funding to build and demonstrate a working physical model.   ',
+    status: 'LIVE',
+    registrationLink: 'https://forms.gle/nPtaZNg1JcQs3UUK8',
+  },
+
+  {
+    title: 'NOVEMBER Month Newsletter',
+    img: '/event_images/newsletter_cover.png',
+    date: '18-11-2026',
+
+    desc: "Returning after an October break, our November newsletter features five major astronomical highlights. This edition explores India's Mangalyaan launch anniversary, Carl Sagan and Edwin Hubble's legacies, the peak of the Leonids meteor shower, and Uranus at opposition.",
+    status: 'UPCOMING',
+    registrationLink: 'https://forms.gle/nPtaZNg1JcQs3UUK8',
   },
 ];

@@ -200,7 +200,7 @@ export default function EventsSection() {
                 >
                   <div
                     className="flex flex-col items-center gap-2"
-                    style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
+                    style={{ writingMode: 'vertical-rl', transform: 'rotate(270deg)' }}
                   >
                     <span className="font-heading text-[9px] tracking-[0.25em] uppercase text-neon-cyan opacity-60">
                       PAC
@@ -280,8 +280,8 @@ export default function EventsSection() {
                             className="mt-2 font-heading text-[10px] font-bold tracking-[0.18em] uppercase text-white border border-white/25 rounded px-3.5 py-2 flex items-center gap-2 w-fit transition-colors"
                             style={{ background: 'rgba(0,212,255,0.08)' }}
                           >
-                            <Satellite size={11} />
-                            RSVP / JOIN MISSION
+                            <Satellite size={16} />
+                            Be a Part of It
                           </motion.a>
                         )}
                       </div>
