@@ -53,7 +53,7 @@ export const EVENTS = [
   },*/
   {
 
-    title: "Talk on Quatum Light & Imaging",
+    title: "Talk on Quantum Light & Imaging",
     //img: '/event_images/s.png',
     img: '/event_images/seminar.png',
     date: '07-OCT-2026',

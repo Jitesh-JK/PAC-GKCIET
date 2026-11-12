@@ -2,7 +2,7 @@
 
 export const ABOUT_METRICS = [
   { value: 'Est. 2025', label: 'Founded', delay: 0.1 },
-  { value: '25+', label: 'Sky Observers', delay: 0.2 },
+  { value: '70+', label: 'Sky Observers', delay: 0.2 },
   { value: '1', label: 'Deep Sky Projects', delay: 0.3 },
 ];
 
